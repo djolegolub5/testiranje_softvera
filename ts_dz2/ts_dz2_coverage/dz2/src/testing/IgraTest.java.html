@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>IgraTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">testing (Jan 18, 2023 5:33:15 PM)</a> &gt; <a href="../../index.html" class="el_group">dz2</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">testing</a> &gt; <span class="el_source">IgraTest.java</span></div><h1>IgraTest.java</h1><pre class="source lang-java linenums">package testing;
+
+
+import org.easymock.EasyMock;
+import org.easymock.Mock;
+import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+
+import org.junit.Assert;
+import org.junit.jupiter.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.runners.MethodSorters;
+
+import FileExceptions.BadFileException;
+import Player.Computer;
+import Player.Person;
+import Player.Player;
+import Ship.ShipCount;
+import Structure.Gridline;
+import igra.Game;
+import igra.MainFrame;
+//import igra.Splash;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+<span class="fc" id="L36">public class IgraTest {</span>
+
+<span class="fc" id="L38">	private static Game game=new Game();</span>
+<span class="fc" id="L39">	private static MainFrame mainFrame=MainFrame.getMainFrame();</span>
+	
+	
+	@BeforeEach
+	public void before() {
+		
+<span class="fc" id="L45">	}</span>
+	
+	@AfterEach
+	public void after() throws IOException {
+<span class="fc" id="L49">		mainFrame.endGame=false;</span>
+<span class="fc" id="L50">		String fajl=&quot;5;1;1;r\r\n&quot;</span>
+				+ &quot;4;1;9;r\r\n&quot;
+				+ &quot;3;1;2;d\r\n&quot;
+				+ &quot;2;3;4;r\r\n&quot;
+				+ &quot;2;8;3;d\r\n&quot;
+				+ &quot;1;4;6;0\r\n&quot;
+				+ &quot;1;8;8;0\r\n&quot;
+				+ &quot;\r\n&quot;
+				+ &quot;. . . . . . . . . \r\n&quot;
+				+ &quot;. O O O O O . . . \r\n&quot;
+				+ &quot;. O . . . . . . . \r\n&quot;
+				+ &quot;. O . . . . . O . \r\n&quot;
+				+ &quot;. O . O O . . O . \r\n&quot;
+				+ &quot;. . . . . . . . . \r\n&quot;
+				+ &quot;. . . . O . . . . \r\n&quot;
+				+ &quot;. . . . . . . . . \r\n&quot;
+				+ &quot;. . . . . . . O . \r\n&quot;
+				+ &quot;. O O O O . . . .\r\n&quot;
+				+ &quot;\r\n&quot;
+				+ &quot;1x 5\r\n&quot;
+				+ &quot;1x 4\r\n&quot;
+				+ &quot;1x 3\r\n&quot;
+				+ &quot;2x 2\r\n&quot;
+				+ &quot;2x 1\r\n&quot;
+				+ &quot;&quot;;
+<span class="fc" id="L75">        File file1=new File(&quot;src/ships.txt&quot;);</span>
+        FileWriter fw1;
+<span class="fc" id="L77">			fw1 = new FileWriter(file1);</span>
+<span class="fc" id="L78">	        BufferedWriter out1 = new BufferedWriter(fw1);</span>
+<span class="fc" id="L79">	        out1.append(fajl);</span>
+<span class="fc" id="L80">	        out1.flush();</span>
+<span class="fc" id="L81">	        fw1.close();</span>
+<span class="fc" id="L82">	        out1.close();</span>
+<span class="fc" id="L83">	}</span>
+	
+	
+	@ParameterizedTest
+	@CsvFileSource(resources=&quot;/ulaz.csv&quot;)
+	@Order(1)
+	public void firstTest(String x, String y) throws InterruptedException {
+		
+<span class="fc" id="L91">		mainFrame.startMain(x, y);</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">		for (int i=0;i&lt;10;i++) {</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">			for (int j=0;j&lt;10;j++) {</span>
+<span class="fc" id="L94">				ActionEvent actionEvent=new ActionEvent(mainFrame, i+j, Integer.toString(j)+Integer.toString(i));</span>
+<span class="fc" id="L95">				mainFrame.actionPerformed(actionEvent);</span>
+				//Thread.sleep(50);
+			}
+		}
+<span class="fc" id="L99">		Assert.assertTrue(mainFrame.endGame);</span>
+<span class="fc" id="L100">	}</span>
+	
+	@ParameterizedTest
+	@CsvFileSource(resources=&quot;/ulaz1.csv&quot;)
+	@Order(2)
+	public void secondTest(String x, String y) throws InterruptedException {
+		
+<span class="fc" id="L107">		mainFrame.startMain(x, y);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">		for (int i=9;i&gt;=0;i--) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">			for (int j=0;j&lt;10;j++) {</span>
+<span class="fc" id="L110">				ActionEvent actionEvent=new ActionEvent(mainFrame, i+j, Integer.toString(i)+Integer.toString(j));</span>
+<span class="fc" id="L111">				mainFrame.actionPerformed(actionEvent);</span>
+				//Thread.sleep(10);
+			}
+		}
+<span class="fc" id="L115">		Assert.assertTrue(mainFrame.endGame);</span>
+		
+<span class="fc" id="L117">	}</span>
+	
+	@Test
+	@Order(3)
+	public void thirdTest() throws InterruptedException {
+<span class="fc" id="L122">		Boolean[][] matrica=new Boolean[10][10];</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">		for (int i=0;i&lt;10;i++) {</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">			for (int j=0;j&lt;10;j++) {</span>
+<span class="fc" id="L125">				matrica[i][j]=false;</span>
+			}
+		}
+<span class="fc" id="L128">		Random random=new Random();</span>
+<span class="fc" id="L129">		Game.main(null);</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">		while (!mainFrame.endGame) {</span>
+<span class="fc" id="L131">			int x=random.nextInt(10);</span>
+<span class="fc" id="L132">			int y=random.nextInt(10);</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">			while (matrica[x][y]) {</span>
+<span class="fc" id="L134">				x=random.nextInt(10);</span>
+<span class="fc" id="L135">				y=random.nextInt(10);</span>
+			}
+<span class="fc" id="L137">			matrica[x][y]=true;</span>
+<span class="fc" id="L138">			ActionEvent actionEvent=new ActionEvent(mainFrame, x+y, Integer.toString(x)+Integer.toString(y));</span>
+<span class="fc" id="L139">			mainFrame.actionPerformed(actionEvent);</span>
+<span class="fc" id="L140">			Thread.sleep(50);</span>
+		}
+<span class="fc" id="L142">		Assert.assertTrue(mainFrame.endGame);</span>
+
+<span class="fc" id="L144">	}</span>
+
+	@Test
+	@Order(4)
+	public void fourthTest() throws IOException {
+		
+<span class="fc" id="L150">		File file = new File(&quot;src/ships.txt&quot;);</span>
+<span class="fc" id="L151">        File rename = new File(&quot;aaa.txt&quot;);</span>
+<span class="fc" id="L152">        file.renameTo(rename);</span>
+        
+<span class="fc" id="L154">        Game.main(null);</span>
+
+<span class="fc" id="L156">        file=new File(&quot;aaa.txt&quot;);</span>
+<span class="fc" id="L157">        rename=new File(&quot;src/ships.txt&quot;);</span>
+<span class="fc" id="L158">        file.renameTo(rename);</span>
+
+<span class="fc" id="L160">	}</span>
+	
+	
+	 @ParameterizedTest
+	 @CsvFileSource(resources=&quot;/ulaz2.csv&quot;)
+	 @Order(5)
+	 public void fifthTest(String x, String y) throws IOException {
+		 
+<span class="fc" id="L168">		 	StringBuffer buffer = new StringBuffer();</span>
+<span class="fc" id="L169">			File file = new File(&quot;src/ships.txt&quot;);</span>
+<span class="fc" id="L170">			Scanner sc = new Scanner(file);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">			while (sc.hasNextLine()) {</span>
+<span class="fc" id="L172">		         buffer.append(sc.nextLine()+System.lineSeparator());</span>
+			}
+<span class="fc" id="L174">			String fajl=buffer.toString();</span>
+<span class="fc" id="L175">			String fajlMod=fajl.replace(x,y);</span>
+
+<span class="fc" id="L177">			FileWriter fw = new FileWriter(file);</span>
+<span class="fc" id="L178">	        BufferedWriter out = new BufferedWriter(fw);</span>
+<span class="fc" id="L179">	        out.append(fajlMod);</span>
+<span class="fc" id="L180">	        out.flush();</span>
+	   
+	        
+<span class="fc" id="L183">	        Game.main(null);</span>
+	  
+<span class="fc" id="L185">	        sc.close();</span>
+<span class="fc" id="L186">	        fw.close();</span>
+<span class="fc" id="L187">	        out.close();</span>
+	        
+	  
+<span class="fc" id="L190">	 }</span>
+	 
+	 
+	 @Test
+	 @Order(6)
+	 public void sixthTest() {
+		 
+<span class="fc" id="L197">		 Player p=new Computer(&quot;test&quot;);</span>
+<span class="fc" id="L198">		 Gridline gL=p.gridlineMine();</span>
+<span class="fc" id="L199">		 Boolean test=false;</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">		 if (gL!=null)test=true;</span>
+<span class="fc" id="L201">		 Assert.assertTrue(test);</span>
+		 
+<span class="fc" id="L203">	 }</span>
+	 
+	 
+	 
+	 @Test
+	 @Order(7)
+	 public void firstMockShipCount() {
+		 
+<span class="fc" id="L211">		 ShipCountTest sct=EasyMock.createMock(ShipCountTest.class);</span>
+<span class="fc" id="L212">		 EasyMock.expect(sct.destroyedUpdate()).andReturn(-1);</span>
+<span class="fc" id="L213">		 EasyMock.replay(sct);</span>
+		 
+<span class="fc" id="L215">		 Assert.assertEquals(-1, sct.destroyedUpdate());</span>
+<span class="fc" id="L216">		 EasyMock.verify(sct);</span>
+		 
+<span class="fc" id="L218">	 }</span>
+	 
+	 @Test
+	 @Order(8)
+	 public void secondMockShipCount() {
+<span class="fc" id="L223">		 ShipCountTest sct=EasyMock.createMock(ShipCountTest.class);</span>
+<span class="fc" id="L224">		 EasyMock.expect(sct.allDestroyed()).andReturn(false);</span>
+<span class="fc" id="L225">		 EasyMock.replay(sct);</span>
+		 
+<span class="fc" id="L227">		 Assert.assertEquals(false, sct.allDestroyed());</span>
+<span class="fc" id="L228">		 EasyMock.verify(sct);</span>
+<span class="fc" id="L229">	 }</span>
+	 
+	 @Test
+	 @Order(9)
+	 public void firstMockGridline() {
+		 
+<span class="fc" id="L235">		 GridlineTest glt=EasyMock.createMock(GridlineTest.class);</span>
+<span class="fc" id="L236">		 EasyMock.expect(glt.shot(5, 5)).andReturn(false);</span>
+<span class="fc" id="L237">		 EasyMock.replay(glt);</span>
+		 
+<span class="fc" id="L239">		 Assert.assertFalse(glt.shot(5, 5));</span>
+<span class="fc" id="L240">		 EasyMock.verify(glt);</span>
+		 
+		 
+<span class="fc" id="L243">	 }</span>
+	 
+	 @Test
+	 @Order(10)
+	 public void secondMockGridline() {
+		 
+<span class="fc" id="L249">		 GridlineTest glt=EasyMock.createMock(GridlineTest.class);</span>
+<span class="fc" id="L250">		 EasyMock.expect(glt.checkBlock(5, 5)).andReturn(&quot;.&quot;);</span>
+<span class="fc" id="L251">		 EasyMock.replay(glt);</span>
+		 
+<span class="fc" id="L253">		 Assert.assertEquals(glt.checkBlock(5, 5),&quot;.&quot;);</span>
+<span class="fc" id="L254">		 EasyMock.verify(glt);</span>
+		 
+		 
+<span class="fc" id="L257">	 }</span>
+	 
+	 @Test
+	 @Order(11)
+	 public void thirdMockGridline() {
+		 
+<span class="fc" id="L263">		 GridlineTest glt=EasyMock.createMock(GridlineTest.class);</span>
+<span class="fc" id="L264">		 EasyMock.expect(glt.checkShot(5, 5)).andReturn(true);</span>
+<span class="fc" id="L265">		 EasyMock.replay(glt);</span>
+		 
+<span class="fc" id="L267">		 Assert.assertEquals(glt.checkShot(5, 5),true);</span>
+<span class="fc" id="L268">		 EasyMock.verify(glt);</span>
+		 
+		 
+<span class="fc" id="L271">	 }</span>
+	 
+	 @Test
+	 @Order(12)
+	 public void firstMockPerson() throws IOException, BadFileException {
+		 
+		 
+<span class="fc" id="L278">		 	StringBuffer buffer = new StringBuffer();</span>
+<span class="fc" id="L279">			File file = new File(&quot;src/ships.txt&quot;);</span>
+<span class="fc" id="L280">			Scanner sc = new Scanner(file);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">			while (sc.hasNextLine()) {</span>
+<span class="fc" id="L282">		         buffer.append(sc.nextLine()+System.lineSeparator());</span>
+			}
+<span class="fc" id="L284">			String fajl=buffer.toString();</span>
+<span class="fc" id="L285">			String fajlMod=fajl.replace(&quot;r&quot;,&quot;w&quot;);</span>
+
+<span class="fc" id="L287">			FileWriter fw = new FileWriter(file);</span>
+<span class="fc" id="L288">	        BufferedWriter out = new BufferedWriter(fw);</span>
+<span class="fc" id="L289">	        out.append(fajlMod);</span>
+<span class="fc" id="L290">	        out.flush();</span>
+	   
+<span class="fc" id="L292">	        PersonTest pt=EasyMock.createMock(PersonTest.class);</span>
+<span class="fc" id="L293">	        EasyMock.expect(pt.createGridMine()).andThrow(new BadFileException(2));</span>
+<span class="fc" id="L294">	        EasyMock.replay(pt);</span>
+			 
+<span class="pc" id="L296">	        BadFileException exception = Assert.assertThrows(BadFileException.class, () -&gt; pt.createGridMine());</span>
+<span class="fc" id="L297">	        Assert.assertEquals(exception.toString(),&quot;FileExceptions.BadFileException&quot;);</span>
+<span class="fc" id="L298">			EasyMock.verify(pt);</span>
+	        
+	  
+<span class="fc" id="L301">	        sc.close();</span>
+<span class="fc" id="L302">	        fw.close();</span>
+<span class="fc" id="L303">	        out.close();</span>
+		 
+		 
+<span class="fc" id="L306">	 }</span>
+	 
+
+	 
+	 @Test
+	 @Order(13)
+	 public void secondMockPerson() {
+<span class="fc" id="L313">		 PersonTest pt=EasyMock.createMock(PersonTest.class);</span>
+<span class="fc" id="L314">	        EasyMock.expect(pt.gridlineMine()).andReturn(new Gridline(10,10));</span>
+<span class="fc" id="L315">	        EasyMock.replay(pt);</span>
+<span class="fc" id="L316">	        Assert.assertNotEquals(null, pt.gridlineMine());</span>
+<span class="fc" id="L317">			EasyMock.verify(pt);</span>
+<span class="fc" id="L318">	 }</span>
+	 
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>testing (Jan 18, 2023 5:33:15 PM)</div></body></html>

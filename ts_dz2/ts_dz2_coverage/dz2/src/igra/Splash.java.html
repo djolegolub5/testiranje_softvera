@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Splash.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">testing (Jan 18, 2023 5:33:15 PM)</a> &gt; <a href="../../index.html" class="el_group">dz2</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">igra</a> &gt; <span class="el_source">Splash.java</span></div><h1>Splash.java</h1><pre class="source lang-java linenums">package igra;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import Ship.ShipCount;
+
+class Splash extends Thread implements ActionListener
+{
+<span class="fc" id="L9">	static volatile boolean ready = true;</span>
+	private int index;
+	private volatile ShipCount ship;
+	
+	private JWindow window;
+	private Timer timerImg;
+	private Timer timerWait;
+	private JLabel label;
+    
+<span class="fc" id="L18">	public Splash(int index, ShipCount ship, Frame frame)</span>
+    {
+<span class="fc" id="L20">    	this.index = index;</span>
+<span class="fc" id="L21">    	this.ship = ship;</span>
+<span class="fc" id="L22">    	timerImg = new Timer(1000, this);</span>
+<span class="fc" id="L23">    	timerWait = new Timer(1000, this);</span>
+<span class="fc" id="L24">    	window = new JWindow(frame);</span>
+<span class="fc" id="L25">        label = new JLabel();</span>
+<span class="fc" id="L26">        window.getContentPane().add(label, BorderLayout.CENTER);</span>
+<span class="fc" id="L27">        window.setSize(500,300);</span>
+<span class="fc" id="L28">    }</span>
+	
+	public void run()
+	{
+<span class="fc bfc" id="L32" title="All 2 branches covered.">		while(ship.allDestroyed == false)</span>
+		{
+<span class="fc bfc" id="L34" title="All 2 branches covered.">			if(ship.destroyed != 0)</span>
+			{
+<span class="fc" id="L36">				runImage(ship.destroyed);</span>
+<span class="fc" id="L37">				ship.destroyed = 0;</span>
+			}
+		}
+<span class="fc" id="L40">	}</span>
+    
+    public void runImage(int imgIndex)
+    {
+<span class="fc" id="L44">    	synchronized(ship)</span>
+    	{
+<span class="fc bfc" id="L46" title="All 2 branches covered.">	    	if(index == 1)</span>
+	    	{
+<span class="fc" id="L48">	    		label.setIcon(new ImageIcon(&quot;src/Images/First/&quot;+imgIndex+&quot;.png&quot;));</span>
+<span class="fc" id="L49">	    		label.repaint();</span>
+<span class="fc" id="L50">	    	}</span>
+	    	else
+	    	{
+<span class="fc" id="L53">	    		label.setIcon(new ImageIcon(&quot;src/Images/Second/&quot;+imgIndex+&quot;.png&quot;));</span>
+<span class="fc" id="L54">	    		label.repaint();</span>
+	    	}
+	    	
+<span class="fc" id="L57">	    	Dimension screenSize =</span>
+<span class="fc" id="L58">	    	          Toolkit.getDefaultToolkit().getScreenSize();</span>
+<span class="fc" id="L59">	    	        Dimension labelSize = label.getPreferredSize();</span>
+<span class="fc" id="L60">	    	        window.setLocation(screenSize.width/2 - (labelSize.width/2),</span>
+<span class="fc" id="L61">	    	                    screenSize.height/2 - (labelSize.height/2));</span>
+	    	
+<span class="fc bfc" id="L63" title="All 2 branches covered.">	    	if(ready == false)</span>
+	    	{
+<span class="fc" id="L65">	    		timerWait.start();</span>
+	    	}
+<span class="fc bfc" id="L67" title="All 2 branches covered.">	    	 if(ready == true)</span>
+	    	{
+<span class="fc" id="L69">	    		ready = false;</span>
+<span class="fc" id="L70">		    	window.setVisible(true);</span>
+<span class="fc" id="L71">		    	timerImg.start();</span>
+	    	}
+    	}
+<span class="fc" id="L74">    }</span>
+    
+    public synchronized void actionPerformed(ActionEvent e) 
+    {
+<span class="fc bfc" id="L78" title="All 4 branches covered.">    	if(timerWait.isRunning() &amp;&amp; ready == true)</span>
+    	{
+<span class="fc" id="L80">    		ready = false;</span>
+<span class="fc" id="L81">    		window.setVisible(true);</span>
+<span class="fc" id="L82">    		timerWait.stop();</span>
+<span class="fc" id="L83">    		timerImg.start();</span>
+<span class="fc" id="L84">    	}</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    	else if(timerImg.isRunning())</span>
+    	{
+<span class="fc" id="L87">    		timerImg.stop();</span>
+<span class="fc" id="L88">    		timerWait.stop();</span>
+<span class="fc" id="L89">    		window.setVisible(false);</span>
+<span class="fc" id="L90">    		ready = true;</span>
+    	}
+<span class="fc" id="L92">      }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>testing (Jan 18, 2023 5:33:15 PM)</div></body></html>

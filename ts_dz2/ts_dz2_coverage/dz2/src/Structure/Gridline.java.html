@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Gridline.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">testing (Jan 18, 2023 5:33:15 PM)</a> &gt; <a href="../../index.html" class="el_group">dz2</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">Structure</a> &gt; <span class="el_source">Gridline.java</span></div><h1>Gridline.java</h1><pre class="source lang-java linenums">package Structure;
+import Ship.Ship;
+
+public class Gridline implements Structure
+{
+	private int x;
+	private int y;
+	private Block grid[][];
+	
+<span class="fc" id="L10">	public Gridline(int x, int y)</span>
+	{
+<span class="fc" id="L12">		this.x = x;</span>
+<span class="fc" id="L13">		this.y = y;</span>
+<span class="fc" id="L14">	}</span>
+	
+	public void create()
+	{
+<span class="fc" id="L18">		grid = new Block[this.x][this.y];</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">		for(int i = 0; i &lt; this.x; i++)</span>
+		{
+<span class="fc bfc" id="L21" title="All 2 branches covered.">			for(int j = 0; j &lt; this.y; j++)</span>
+<span class="fc" id="L22">				grid[i][j] = new Block(i,j);</span>
+		}
+<span class="fc" id="L24">	}</span>
+	
+	public boolean checkShot(int x, int y) //check if a shot can be done in enemies grid
+	{
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		if(grid[x][y].shot == false)</span>
+<span class="fc" id="L29">			return true;</span>
+		else
+<span class="fc" id="L31">			return false;</span>
+	}
+	
+	public boolean checkShip(int n, int x, int y, String dir)
+	{	
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		if(n == 1)</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">			return !grid[x][y].placed;</span>
+		
+<span class="fc bfc" id="L39" title="All 4 branches covered.">		if(dir.equals(&quot;r&quot;) &amp;&amp; x+n &lt; 10) //right</span>
+		{
+<span class="fc bfc" id="L41" title="All 2 branches covered.">			for(int i = 0; i &lt; n; i++)</span>
+			{
+<span class="fc bfc" id="L43" title="All 2 branches covered.">				if(grid[x+i][y].placed == true)</span>
+<span class="fc" id="L44">					return false;</span>
+			}
+<span class="fc" id="L46">			return true;</span>
+		}
+<span class="fc bfc" id="L48" title="All 4 branches covered.">		if(dir.equals(&quot;d&quot;) &amp;&amp; y+n &lt; 10) //down</span>
+		{
+<span class="fc bfc" id="L50" title="All 2 branches covered.">			for(int i = 0; i &lt; n; i++)</span>
+			{
+<span class="fc bfc" id="L52" title="All 2 branches covered.">				if(grid[x][y+i].placed == true)</span>
+<span class="fc" id="L53">					return false;</span>
+			}
+<span class="fc" id="L55">			return true;</span>
+		}
+		
+<span class="fc" id="L58">		return false;</span>
+	}
+	
+	public String checkBlock(int x, int y)
+	{
+<span class="fc" id="L63">		return grid[x][y].show;</span>
+	}
+	
+	public void place(Ship ship) //place a ship on the gridline in creation
+	{
+<span class="fc" id="L68">		int x = ship.x;</span>
+<span class="fc" id="L69">		int y = ship.y;</span>
+<span class="fc" id="L70">		int n = ship.n;</span>
+<span class="fc" id="L71">		String dir = ship.dir; </span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">		if(n == 1)</span>
+		{
+<span class="fc" id="L74">			grid[x][y].place(ship);</span>
+<span class="fc" id="L75">			ship.place(grid[x][y]);</span>
+<span class="fc" id="L76">			return;</span>
+		}
+		
+<span class="fc bfc" id="L79" title="All 2 branches covered.">		if(dir.equals(&quot;r&quot;)) //right</span>
+		{
+<span class="fc bfc" id="L81" title="All 2 branches covered.">			for(int i = 0; i &lt; n; i++)</span>
+			{
+<span class="fc" id="L83">				grid[x+i][y].place(ship);</span>
+<span class="fc" id="L84">				ship.place(grid[x+i][y]);</span>
+			}
+<span class="fc" id="L86">			return;</span>
+		}
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">		if(dir.equals(&quot;d&quot;)) //down</span>
+		{
+<span class="fc bfc" id="L90" title="All 2 branches covered.">			for(int i = 0; i &lt; n; i++)</span>
+			{
+<span class="fc" id="L92">				grid[x][y+i].place(ship);</span>
+<span class="fc" id="L93">				ship.place(grid[x][y+i]);</span>
+			}
+<span class="fc" id="L95">			return;</span>
+		}
+<span class="nc" id="L97">	}</span>
+	
+	public boolean shot(int x, int y)
+	{
+<span class="fc" id="L101">		grid[x][y].shot(grid[x][y].placed);</span>
+<span class="fc" id="L102">		return grid[x][y].placed;</span>
+	}
+	
+	public void mark(int x, int y, boolean hit) 
+	//mark on the enemies grid the shot according to outcome
+	{
+<span class="fc" id="L108">		grid[x][y].shot(hit);</span>
+<span class="fc" id="L109">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>testing (Jan 18, 2023 5:33:15 PM)</div></body></html>

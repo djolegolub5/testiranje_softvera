@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ShipCount.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">testing (Jan 18, 2023 5:33:15 PM)</a> &gt; <a href="../../index.html" class="el_group">dz2</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">Ship</a> &gt; <span class="el_source">ShipCount.java</span></div><h1>ShipCount.java</h1><pre class="source lang-java linenums">package Ship;
+import Player.Player;
+import java.util.*;
+
+public class ShipCount 
+{
+<span class="fc" id="L7">	LinkedHashMap&lt;Ship, Boolean&gt; ships = new LinkedHashMap&lt;Ship, Boolean&gt;();</span>
+	public int destroyed;
+	public boolean allDestroyed;
+	
+<span class="fc" id="L11">	public ShipCount(Player play)</span>
+	{
+<span class="fc" id="L13">		play.getShips().forEach( (i) -&gt; {ships.put(i, false);});</span>
+<span class="fc" id="L14">		destroyed = 0;</span>
+<span class="fc" id="L15">		allDestroyed = false;</span>
+<span class="fc" id="L16">	}</span>
+	
+	public int destroyedUpdate()
+	//returns the newly destroyed ships parameters, if nothing is destroyed then -1
+	{     
+<span class="fc bfc" id="L21" title="All 2 branches covered.">		for(Ship i : ships.keySet())</span>
+		{
+<span class="fc bfc" id="L23" title="All 2 branches covered.">			if(i.destroyed != ships.get(i))</span>
+			{
+<span class="fc" id="L25">				ships.put(i, true);</span>
+<span class="fc" id="L26">				destroyed = i.n;</span>
+<span class="fc" id="L27">				return i.n;</span>
+			}
+		}
+<span class="fc" id="L30">		return -1;</span>
+	}
+	
+	public boolean allDestroyed()
+	{
+<span class="fc" id="L35">		int count = 0;</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		for(boolean i : ships.values())</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">			if(i == true) count++;</span>
+		
+<span class="fc bfc" id="L39" title="All 2 branches covered.">		if(count == 7)</span>
+		{
+<span class="fc" id="L41">			allDestroyed = true;</span>
+<span class="fc" id="L42">			return true;</span>
+		}
+		else
+<span class="fc" id="L45">			return false;</span>
+	}
+	
+	public Collection&lt;Boolean&gt; getDestroyed()
+	{
+<span class="fc" id="L50">		return ships.values();</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>testing (Jan 18, 2023 5:33:15 PM)</div></body></html>

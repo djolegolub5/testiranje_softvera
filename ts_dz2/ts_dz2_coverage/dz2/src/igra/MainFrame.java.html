@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MainFrame.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">testing (Jan 18, 2023 5:33:15 PM)</a> &gt; <a href="../../index.html" class="el_group">dz2</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">igra</a> &gt; <span class="el_source">MainFrame.java</span></div><h1>MainFrame.java</h1><pre class="source lang-java linenums">package igra;
+import Player.Computer;
+import Player.Person;
+import Player.Player;
+import Ship.ShipCount;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import FileExceptions.BadFileException;
+import java.util.*;
+
+public class MainFrame implements ActionListener
+{
+<span class="fc" id="L15">	private static MainFrame main = new MainFrame();</span>
+	
+	private JFrame frame;
+	private JButton buttonM[][];
+	private JPanel panelM;
+	private JButton buttonE[][];
+	private JPanel panelE;
+	private JPanel lowPanel;
+	private JPanel highPanel;
+	private JTextArea text;
+	private Player play1;
+	private ShipCount count1;
+	private Player play2;
+	private ShipCount count2;
+<span class="fc" id="L29">	private String infoMess = &quot;Click any button on the left to start the game.&quot;;</span>
+	private JTable table;
+	private String[] columnNames;
+	private JScrollPane scrollPane;
+	public boolean endGame;
+
+<span class="fc" id="L35">	private MainFrame() {}</span>
+	
+	public static MainFrame getMainFrame()
+	{
+<span class="fc" id="L39">		return main;</span>
+	}
+	
+	public boolean startMain(String protag, String antag)
+	{
+<span class="fc" id="L44">		play1 = new Person(protag);</span>
+<span class="fc" id="L45">		play2 = new Computer(antag);</span>
+		try
+		{
+<span class="fc" id="L48">			play1.createGridMine();</span>
+<span class="fc" id="L49">			play2.createGridMine();</span>
+<span class="fc" id="L50">		}</span>
+<span class="fc" id="L51">		catch(BadFileException e)</span>
+		{
+<span class="fc" id="L53">			e.printMessage();</span>
+<span class="fc" id="L54">			return false;</span>
+		}
+<span class="fc" id="L56">		initiateComponents();</span>
+<span class="fc" id="L57">		frame.setVisible(true);</span>
+<span class="fc" id="L58">		return true;</span>
+	}
+	
+	
+	private void initiateComponents()
+	{
+<span class="fc" id="L64">		count1 = new ShipCount(play1);</span>
+<span class="fc" id="L65">		count2 = new ShipCount(play2);</span>
+<span class="fc" id="L66">		frame = new JFrame(&quot;BattleShip&quot;);</span>
+<span class="fc" id="L67">		buttonM = new JButton[10][10];</span>
+<span class="fc" id="L68">		panelM = new JPanel();</span>
+<span class="fc" id="L69">		buttonE = new JButton[10][10];</span>
+<span class="fc" id="L70">		panelE = new JPanel();</span>
+<span class="fc" id="L71">		lowPanel = new JPanel();</span>
+<span class="fc" id="L72">		highPanel = new JPanel();</span>
+<span class="fc" id="L73">		text = new JTextArea(infoMess,10,25);</span>
+<span class="fc" id="L74">		columnNames = new String[] {</span>
+<span class="fc" id="L75">				&quot;Length&quot;, play1.getName(), play2.getName()</span>
+			};
+<span class="fc" id="L77">		table = new JTable(tableContent(), columnNames);</span>
+<span class="fc" id="L78">		scrollPane = new JScrollPane(table, </span>
+<span class="fc" id="L79">				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,</span>
+<span class="fc" id="L80">                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);</span>
+		
+<span class="fc" id="L82">		createPanelM();</span>
+<span class="fc" id="L83">		createPanelE();</span>
+<span class="fc" id="L84">		createHighPanel();</span>
+<span class="fc" id="L85">		createLowPanel();</span>
+<span class="fc" id="L86">		createFrame();</span>
+<span class="fc" id="L87">	}</span>
+	public Splash startSplash1()
+	{
+<span class="fc" id="L90">        Splash splash1 = new Splash(1, count2, frame);</span>
+<span class="fc" id="L91">		return splash1;</span>
+	}
+	
+	public Splash startSplash2()
+	{
+<span class="fc" id="L96">        Splash splash2 = new Splash(2, count1, frame);</span>
+<span class="fc" id="L97">		return splash2;</span>
+	}
+	
+	private Object[][] tableContent()
+	{
+<span class="fc" id="L102">		Object[][] data = new Object[7][3];</span>
+<span class="fc" id="L103">		ArrayList&lt;Integer&gt; sizes = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc" id="L104">		Collections.addAll(sizes, 5, 4, 3, 2, 2, 1, 1);</span>
+		
+<span class="fc" id="L106">		Iterator&lt;Integer&gt; sizesIt = sizes.iterator();</span>
+<span class="fc" id="L107">		Iterator&lt;Boolean&gt; count1It = count1.getDestroyed().iterator();</span>
+<span class="fc" id="L108">		Iterator&lt;Boolean&gt; count2It = count2.getDestroyed().iterator();</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">		for(Object[] obj: data)</span>
+		{
+<span class="fc" id="L111">			obj[0] = sizesIt.next();</span>
+<span class="fc" id="L112">			obj[1] = count1It.next();</span>
+<span class="fc" id="L113">			obj[2] = count2It.next();</span>
+		}
+<span class="fc" id="L115">		return data;</span>
+	}
+	
+	private void createPanelM()
+	{
+<span class="fc" id="L120">		panelM.setLayout(new GridLayout(10, 10));</span>
+<span class="fc" id="L121">		panelM.setPreferredSize(new Dimension(450, 300));</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">		for(int i = 0; i &lt; 10; i++)</span>
+		{
+<span class="fc bfc" id="L124" title="All 2 branches covered.">			for(int j = 0; j &lt; 10; j++)</span>
+			{
+<span class="fc" id="L126">				buttonM[j][i] = new JButton();</span>
+<span class="fc" id="L127">				buttonM[j][i].setText(play1.checkBlockM(j,i));</span>
+<span class="fc" id="L128">				buttonM[j][i].setBackground(Color.WHITE);</span>
+<span class="fc" id="L129">				buttonM[j][i].setEnabled(false);</span>
+<span class="fc" id="L130">				panelM.add(buttonM[j][i]);</span>
+			}
+		}
+<span class="fc" id="L133">	}</span>
+	
+	private void createPanelE()
+	{
+<span class="fc" id="L137">		panelE.setLayout(new GridLayout(10, 10));</span>
+<span class="fc" id="L138">		panelE.setPreferredSize(new Dimension(450, 300));</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">		for(int i = 0; i &lt; 10; i++)</span>
+		{
+<span class="fc bfc" id="L141" title="All 2 branches covered.">			for(int j = 0; j &lt; 10; j++)</span>
+			{
+<span class="fc" id="L143">				buttonE[j][i] = new JButton();</span>
+<span class="fc" id="L144">				buttonE[j][i].setText(&quot;.&quot;);</span>
+<span class="fc" id="L145">				buttonE[j][i].setBackground(Color.WHITE);</span>
+<span class="fc" id="L146">				panelE.add(buttonE[j][i]);</span>
+<span class="fc" id="L147">				buttonE[j][i].setActionCommand(String.valueOf(j)+String.valueOf(i));</span>
+<span class="fc" id="L148">				buttonE[j][i].addActionListener(this);</span>
+			}
+		}
+<span class="fc" id="L151">	}</span>
+	
+	private void createHighPanel()
+	{
+<span class="fc" id="L155">		highPanel.setSize(150,500);</span>
+<span class="fc" id="L156">		highPanel.setLayout(new FlowLayout());</span>
+<span class="fc" id="L157">		highPanel.add(panelM);</span>
+<span class="fc" id="L158">		scrollPane.setPreferredSize(new Dimension(300, 136));</span>
+<span class="fc" id="L159">		highPanel.add(scrollPane);</span>
+<span class="fc" id="L160">	}</span>
+	
+	private void createLowPanel()
+	{
+<span class="fc" id="L164">		lowPanel.add(panelE);</span>
+<span class="fc" id="L165">		text.setEditable(false);</span>
+<span class="fc" id="L166">		lowPanel.add(text);</span>
+<span class="fc" id="L167">	}</span>
+	
+	private void createFrame()
+	{
+<span class="fc" id="L171">		frame.setSize(900,700);</span>
+<span class="fc" id="L172">		frame.setLayout(new GridLayout(2, 1));</span>
+<span class="fc" id="L173">		frame.add(highPanel);</span>
+<span class="fc" id="L174">		frame.add(lowPanel);</span>
+<span class="fc" id="L175">		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+		
+<span class="fc" id="L177">		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();</span>
+<span class="fc" id="L178">		Dimension labelSize = frame.getPreferredSize();</span>
+<span class="fc" id="L179">		frame.setLocation(screenSize.width/2 - (labelSize.width/2),</span>
+<span class="fc" id="L180">		                  screenSize.height/2 - (labelSize.height/2));</span>
+<span class="fc" id="L181">	}</span>
+
+	public void actionPerformed(ActionEvent e) {
+<span class="fc bfc" id="L184" title="All 2 branches covered.">		if(endGame == true)</span>
+<span class="fc" id="L185">			return;</span>
+<span class="fc" id="L186">		String command = (e.getActionCommand());</span>
+<span class="fc" id="L187">		text.setText(command);</span>
+<span class="fc" id="L188">		int x = Integer.parseInt(String.valueOf(command.substring(0,1)));</span>
+<span class="fc" id="L189">		int y = Integer.parseInt(String.valueOf(command.substring(1,2)));</span>
+		
+		
+<span class="fc bfc" id="L192" title="All 2 branches covered.">		if(play1.takeAim(play2, x, y))</span>
+<span class="fc" id="L193">			text.setText(play1.getName() + &quot; got a successful shot!\n&quot;);</span>
+		else
+<span class="fc" id="L195">			text.setText(play1.getName() + &quot; missed the shot.\n&quot;);</span>
+<span class="fc" id="L196">		int updateCount2 = count2.destroyedUpdate();</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">		if(updateCount2 != -1)</span>
+<span class="fc" id="L198">			text.append(play2.getName() + &quot;'s &quot; + updateCount2 + &quot; length ship was destroyed!\n&quot;);</span>
+<span class="fc" id="L199">		changeButtonE(x, y);</span>
+		
+		
+		
+<span class="fc bfc" id="L203" title="All 2 branches covered.">		if(play2.takeAim(play1, 0, 0))</span>
+<span class="fc" id="L204">			text.append(play2.getName() + &quot; got a successful shot!\n&quot;);</span>
+		else
+<span class="fc" id="L206">			text.append(play2.getName() + &quot; missed the shot.\n&quot;);</span>
+<span class="fc" id="L207">		int updateCount1 = count1.destroyedUpdate();</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">		if(updateCount1 != -1)</span>
+<span class="fc" id="L209">			text.append(play1.getName() + &quot;'s &quot; + updateCount1 + &quot; length ship was destroyed!\n&quot;);</span>
+<span class="fc" id="L210">		changeButtonM();</span>
+		
+<span class="fc" id="L212">		updateTable();</span>
+<span class="fc" id="L213">		checkEnd();</span>
+<span class="fc" id="L214">	}</span>
+	
+	private void changeButtonE(int x, int y)
+	{
+<span class="fc" id="L218">		String txt = play1.checkBlockE(x,y);</span>
+<span class="fc" id="L219">		buttonE[x][y].setText(txt);</span>
+<span class="fc" id="L220">		buttonE[x][y].setEnabled(false);</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">		if(txt.equals(&quot;X&quot;))</span>
+<span class="fc" id="L222">			buttonE[x][y].setBackground(new Color(170,255,153));</span>
+		else
+<span class="fc" id="L224">			buttonE[x][y].setBackground(new Color(204,247,255));</span>
+<span class="fc" id="L225">	}</span>
+	private void changeButtonM()
+	{
+<span class="fc bfc" id="L228" title="All 2 branches covered.">		for(int i = 0; i &lt; 10; i++)</span>
+		{
+<span class="fc bfc" id="L230" title="All 2 branches covered.">			for(int j = 0; j &lt; 10; j++)</span>
+			{
+<span class="fc" id="L232">				String txt = play2.checkBlockE(j,i);</span>
+<span class="fc" id="L233">				buttonM[j][i].setText(txt);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">				if(txt.equals(&quot;X&quot;))</span>
+<span class="fc" id="L235">					buttonM[j][i].setBackground(new Color(255,179,204));</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">				else if(txt.equals(&quot;+&quot;))</span>
+<span class="fc" id="L237">					buttonM[j][i].setBackground(new Color(234,230,255));</span>
+			}
+		}
+<span class="fc" id="L240">	}</span>
+	
+	private void updateTable()
+	{
+<span class="fc" id="L244">		table.setModel(new DefaultTableModel(tableContent(), columnNames));</span>
+<span class="fc" id="L245">	}</span>
+	
+	private void checkEnd()
+	{
+<span class="fc bfc" id="L249" title="All 4 branches covered.">		if(count1.allDestroyed() &amp;&amp; count2.allDestroyed())</span>
+		{
+<span class="fc" id="L251">			text.append(&quot;Game ends in draw!\n&quot;);</span>
+<span class="fc" id="L252">			endGame = true;</span>
+<span class="fc" id="L253">		}</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">		else if(count1.allDestroyed())</span>
+		{
+<span class="fc" id="L256">			text.append(play2.getName() + &quot; wins the game!\n&quot;);</span>
+<span class="fc" id="L257">			endGame = true;</span>
+<span class="fc" id="L258">		}</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">		else if(count2.allDestroyed())</span>
+		{
+<span class="fc" id="L261">			text.append(play1.getName() + &quot; wins the game!\n&quot;);</span>
+<span class="fc" id="L262">			endGame = true;</span>
+		}
+<span class="fc" id="L264">	}</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>testing (Jan 18, 2023 5:33:15 PM)</div></body></html>

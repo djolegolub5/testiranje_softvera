@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Computer.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">testing (Jan 18, 2023 5:33:15 PM)</a> &gt; <a href="../../index.html" class="el_group">dz2</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">Player</a> &gt; <span class="el_source">Computer.java</span></div><h1>Computer.java</h1><pre class="source lang-java linenums">package Player;
+import Ship.Ship;
+import java.util.Random;
+
+import FileExceptions.BadFileException;
+
+public class Computer extends Player 
+{
+
+	public Computer(String name)
+	{
+<span class="fc" id="L12">		super(name);</span>
+<span class="fc" id="L13">	}</span>
+	
+	public void createGridMine() throws BadFileException
+	{
+<span class="fc" id="L17">		gridM.create();</span>
+<span class="fc" id="L18">		Random random = new Random();</span>
+<span class="fc" id="L19">		int shipN[] = {5, 4, 3, 2, 2, 1, 1};</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">		for(int i:shipN)</span>
+		{
+<span class="fc" id="L22">			boolean next = false;</span>
+<span class="fc" id="L23">			int x = 0;</span>
+<span class="fc" id="L24">			int y = 0;</span>
+<span class="fc" id="L25">			String dir[] = {&quot;r&quot;, &quot;d&quot;};</span>
+<span class="fc" id="L26">			int dirN = 0;</span>
+			
+<span class="fc bfc" id="L28" title="All 2 branches covered.">			while(next == false)</span>
+			{
+<span class="fc" id="L30">				x = random.nextInt(10);</span>
+<span class="fc" id="L31">				y = random.nextInt(10);</span>
+<span class="fc" id="L32">				dirN = random.nextInt(2);</span>
+<span class="fc" id="L33">				next = gridM.checkShip(i, x, y, dir[dirN]);</span>
+			}
+<span class="fc" id="L35">			Ship temp = new Ship(i, x, y, dir[dirN]);</span>
+<span class="fc" id="L36">			ship.add(temp);</span>
+<span class="fc" id="L37">			gridM.place(temp);</span>
+		}
+<span class="fc" id="L39">	}</span>
+	
+	public boolean takeAim(Player pers, int x, int y)
+	{
+<span class="fc" id="L43">		boolean shot = false;</span>
+<span class="fc" id="L44">		Random random = new Random();</span>
+<span class="fc" id="L45">		boolean next = false;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		while(next == false)</span>
+		{
+<span class="fc" id="L48">			x = random.nextInt(10);</span>
+<span class="fc" id="L49">			y = random.nextInt(10);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">			if(gridE.checkShot(x, y) == true)</span>
+			{
+<span class="fc" id="L52">				shot = pers.shot(x, y);</span>
+<span class="fc" id="L53">				gridE.mark(x, y, shot);</span>
+<span class="fc" id="L54">				next = true;</span>
+			}
+		}
+<span class="fc" id="L57">		return shot;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>testing (Jan 18, 2023 5:33:15 PM)</div></body></html>
